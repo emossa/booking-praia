@@ -430,6 +430,11 @@ model Booking {
     userId         String?
     userIdentifier String?
 
+    nome    String?
+    cognome String?
+    email   String?
+    phone   String?
+
     checkin  DateTime
     checkout DateTime
 
@@ -438,7 +443,8 @@ model Booking {
     chi_neonati Int
     chi_pets    Int
 
-    price Float?
+    status String? @default("pending")
+    price  Float?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

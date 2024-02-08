@@ -27,7 +27,6 @@ const AccountLayout: React.FC<{ children: React.ReactNode; roles: '' }> = ({
   return (
     <main className="flex justify-between">
 
-
       {children}
     </main>
   );
