@@ -115,9 +115,9 @@ export default function Home() {
 
   const advertisementImages = [
     ["/media/test/hotel-prova.jpg"],
-    ["/media/test/hotel-do-so.jpg"],
-    ["/media/test/hotel-enotria.jpg"],
-    ["/media/test/hotel-isola.jpg"],
+    ["/media/test/hotel1.jpg"],
+    ["/media/test/hotel2.jpg"],
+    ["/media/test/hotel3.jpg"],
   ];
 
   return (
