@@ -1,17 +1,15 @@
 import { Box, Spinner } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { Sidebar } from "../../Sidebar";
 import { useAccountLayoutStore } from "./store";
-import { Role } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
-const AccountLayout: React.FC<{ children: React.ReactNode; roles: Role[] }> = ({
+const AccountLayout: React.FC<{ children: React.ReactNode; roles: '' }> = ({
   children,
   roles,
 }) => {
   const { data } = useSession({ required: true });
-  const isLoading = useAccountLayoutStore((state) => state.isLoading);
+  const isLoading = useAccountLayoutStore((state: any) => state.isLoading);
   const router = useRouter();
 
   const [width, setWidth] = useState<number>(0);
@@ -44,24 +42,7 @@ const AccountLayout: React.FC<{ children: React.ReactNode; roles: Role[] }> = ({
           <Spinner size="xl" />
         </Box>
       )}
-      <Sidebar
-        {...(isLoading
-          ? {
-              filter: "blur(5px)",
-              opacity: 0.8,
-            }
-          : {})}
-      >
-        <Box
-          px={{
-            base: 0,
-            md: 6,
-          }}
-          mb={isMobile ? "75px" : "0px"}
-        >
-          {children}
-        </Box>
-      </Sidebar>
+      {children}
     </main>
   );
 };
