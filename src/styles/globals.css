@@ -1,0 +1,120 @@
+:root {
+  --campari-primary: #ba0c2f;
+  --white-primary: #fafafa;
+  --black-primary: #292929; /* #090A22 */
+  --error-box-primary: #e53e3e;
+  --hover-gray: #e5e7eb;
+
+  --input-light: #e2e8f0; /* gray.200 */
+  --input-dark: #1a202c; /* gray.800 */
+
+  --light-border: #d1d5db;
+  --light-border-hover: #9ca3af;
+  --dark-border: #444;
+  --dark-border-hover: #575757;
+
+  --dark-bg: #101010;
+  --dark-bg-card: #222;
+  --dark-hover: #2b2b2b;
+
+  --light-bg-sidebar: #f9fafb;
+  --light-hover: #e4e6ec;
+
+  --day-between-calendar: #b9bcc1;
+
+  --praia-primary: #0c4f6c;
+  --praia-secondary: #f5a630;
+  --praia-rombo-1: #259fd9;
+  --praia-rombo-1-20: #259fd920;
+  --praia-rombo-1-20-1: #e1eff6;
+  --praia-rombo-1-30: #259fd930;
+  --praia-rombo-1-80: #259fd980;
+  --praia-rombo-1-80-1: #94cee8;
+  --praia-rombo-2: #80af6e;
+  --praia-rombo-3: #ef5f60;
+  --praia-rombo-4: #f3992f;
+  --praia-rombo-5: #573287;
+}
+
+/* Nascondi la scrollbar verticale */
+::-webkit-scrollbar {
+  width: 2px; /* Larghezza della scrollbar verticale */
+  height: 2px; /* Altezza della scrollbar orizzontale */
+  border: 0px solid #e6ecf8;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--dark-border);
+  opacity: 0.5;
+}
+
+/* Swiper */
+.swiper-button-prev,
+.swiper-button-next {
+  color: var(--black-primary) !important;
+  background-color: #ffffff80 !important;
+  border-radius: 10px;
+  padding: 15px;
+  min-width: 44px;
+}
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 25px !important;
+}
+
+@font-face {
+  font-family: "CalSans-SemiBold";
+  src: url("/fonts/CalSans/webfonts/CalSans-SemiBold.ttf");
+}
+
+@font-face {
+  font-family: "Inter-Regular";
+  src: url("/fonts/Inter/webfonts/Inter-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Inter-Bold";
+  src: url("/fonts/Inter/webfonts/Inter-Bold.ttf");
+}
+
+/* Animazioni */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes borderRadiusFullToLg {
+  0% {
+    border-radius: 9999px;
+  }
+  100% {
+    border-radius: 0.5rem;
+  }
+}
+
+@keyframes expandFromLeft {
+  0% {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  100% {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+@keyframes collapseToLeft {
+  0% {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  100% {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+}

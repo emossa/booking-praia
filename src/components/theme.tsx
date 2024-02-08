@@ -1,0 +1,225 @@
+import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
+
+const config: ThemeConfig = {
+  initialColorMode: "light",
+  useSystemColorMode: false,
+  // initialColorMode: "system",
+  // useSystemColorMode: true,
+};
+const theme = extendTheme({
+  config,
+  components: {
+    Checkbox: {
+      baseStyle: {
+        control: {
+          borderColor: "#444",
+        },
+      },
+    },
+    Input: {
+      variants: {},
+    },
+    Button: {
+      variants: {
+        primary: {
+          w: "auto",
+          h: "auto",
+          fontFamily: "Inter-Bold",
+          size: "md",
+          color: "var(--white-primary)",
+          background: "var(--praia-primary)", //"var(--black-primary)",
+          borderRadius: "lg",
+          _hover: {
+            color: "var(--white-primary)",
+            background: "var(--black-primary)", //"var(--dark-border-hover)",
+          },
+          textTransform: "uppercase",
+          px: 5,
+          py: 3,
+        },
+        secondary: {
+          w: "auto",
+          h: "auto",
+          fontFamily: "Inter-Bold",
+          size: "md",
+          color: "var(--black-primary)",
+          background: "var(--white-primary)",
+          borderRadius: "lg",
+          border: "1px solid var(--black-primary)",
+          _hover: {
+            color: "var(--white-primary)",
+            background: "var(--black-primary)",
+          },
+          px: 5,
+          py: 3,
+        },
+        primaryRound: {
+          w: "auto",
+          h: "auto",
+          size: "md",
+          color: "var(--white-primary)",
+          background: "var(--praia-primary)", //"var(--black-primary)",
+          textTransform: "uppercase",
+          borderRadius: "full",
+          fontFamily: "Inter-Bold",
+          px: 6,
+          py: 4,
+          fontSize: "xs",
+          _hover: {
+            borderRadius: "lg",
+            animationName: "borderRadiusFullToLg",
+            animationDuration: "0.7s",
+          },
+        },
+        ghostRound: {
+          w: "auto",
+          h: "auto",
+          fontFamily: "Inter-Bold",
+          size: "md",
+          borderRadius: "full",
+          textTransform: "uppercase",
+          px: 6,
+          py: 6,
+          color: "var(--black-primary)",
+          background: "transparent",
+          _hover: {
+            background: "var(--hover-gray)",
+            transition: "background 0.3s ease-in-out",
+          },
+        },
+        ghostRoundMenu: {
+          w: "auto",
+          h: "auto",
+          fontFamily: "Inter-Regular",
+          fontWeight: "500",
+          size: "md",
+          borderRadius: "full",
+          textTransform: "none",
+          p: 4,
+          color: "var(--praia-primary)",
+          background: "transparent",
+          fontSize: "md",
+          _hover: {
+            background: "var(--praia-rombo-1-20)", // "var(--hover-gray)",
+            transition: "background 0.3s ease-in-out",
+          },
+        },
+        ghostRoundSecondary: {
+          w: "auto",
+          h: "auto",
+          fontFamily: "CalSans-SemiBold",
+          size: "md",
+          borderRadius: "full",
+          px: 6,
+          py: 3,
+          color: "var(--black-primary)",
+          background: "transparent",
+          _hover: {
+            background: "var(--hover-gray)",
+            transition: "background 0.3s ease-in-out",
+          },
+        },
+        RoundErrorSecondary: {
+          w: "auto",
+          h: "auto",
+          fontFamily: "CalSans-SemiBold",
+          size: "md",
+          borderRadius: "full",
+          px: 6,
+          py: 3,
+          color: "var(--white-primary)",
+          background: "#E5534B",
+          _hover: {
+            background: "#B03E38",
+            transition: "background 0.3s ease-in-out",
+          },
+        },
+        filter: {
+          w: "auto",
+          h: "auto",
+          fontFamily: "CalSans-SemiBold",
+          size: "md",
+          borderRadius: "full",
+          px: 6,
+          py: 4,
+          color: "var(--black-primary)",
+          background: "transparent",
+          _hover: {
+            background: "var(--praia-rombo-1-30)", // "var(--hover-gray)",
+            transition: "background 0.3s ease-in-out",
+          },
+        },
+        plusMinus: {
+          minH: "47px",
+          borderRadius: "full",
+          color: "var(--praia-primary)",
+          background: "var(--praia-rombo-1-20)", // "var(--hover-gray)",
+          _hover: {
+            background: "var(--praia-primary)", //"var(--black-primary)",
+            color: "var(--white-primary)",
+          },
+        },
+        gallery: {
+          fontFamily: "CalSans-SemiBold",
+          size: "md",
+          color: "var(--black-primary)",
+          background: "var(--white-primary)",
+          border: "1px solid var(--black-primary)",
+          _hover: {
+            background: "var(--light-hover)",
+          },
+        },
+        notAvailable: {
+          w: "auto",
+          h: "auto",
+          fontFamily: "Inter-Bold",
+          size: "md",
+          color: "var(--error-box-primary)",
+          background: "var(--white-primary)",
+          px: 5,
+          py: 3,
+          _focusVisible: {
+            boxShadow: "none",
+          },
+        },
+      },
+    },
+    Text: {
+      variants: {
+        header: {
+          fontFamily: "CalSans-SemiBold",
+          fontSize: { base: "md", md: "2xl" },
+          color: "var(--black-primary)",
+        },
+        headerLabelMenu: {
+          fontFamily: "CalSans-SemiBold",
+          fontSize: "sm",
+          color: "var(--praia-primary)",
+          cursor: "pointer",
+        },
+        bold: {
+          fontFamily: "CalSans-SemiBold",
+          color: "var(--black-primary)",
+          fontSize: "md",
+          cursor: "pointer",
+        },
+        label: {
+          fontFamily: "Inter-Regular",
+          fontWeight: "500",
+          fontSize: "sm",
+          color: "var(--black-primary)",
+          cursor: "pointer",
+        },
+        link: {
+          fontFamily: "CalSans-SemiBold",
+          fontWeight: "500",
+          fontSize: "sm",
+          textDecoration: "underline",
+          cursor: "pointer",
+        },
+      },
+    },
+  },
+});
+
+export default theme;

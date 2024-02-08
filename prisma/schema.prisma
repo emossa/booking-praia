@@ -1,0 +1,445 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+    // Further reading:
+    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+    url      = env("DATABASE_URL")
+}
+
+// Necessary for Next auth
+model Account {
+    id                String  @id @default(cuid())
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? // @db.Text
+    access_token      String? // @db.Text
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String? // @db.Text
+    session_state     String?
+    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([provider, providerAccountId])
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
+
+// tokens from krossbooking
+model AuthToken {
+    id                        String    @id @default(cuid())
+    type                      String // api_key or autehntication_token_barer
+    token                     String // token is a sting anche can by or api_key or autehntication token barer
+    auth_token_expire         DateTime?
+    auth_token_expire_seconds Int?
+
+    userId String? @unique
+    user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum UserRole {
+    MERCHANT
+    ADMIN
+    GUEST
+}
+
+model User {
+    id            String    @id @default(cuid())
+    name          String?
+    email         String?   @unique
+    emailVerified DateTime?
+    image         String?
+    role          UserRole  @default(GUEST)
+    accounts      Account[]
+    sessions      Session[]
+
+    apiUsr  String?
+    apiPsw  String?
+    hotelId String?
+
+    // stripe
+    stripePk       String?
+    stripeSk       String?
+    stripeTestMode Boolean? @default(false) // true = test mode, false = live mode
+
+    createdAt  DateTime    @default(now())
+    updatedAt  DateTime    @updatedAt
+    properties Property[]
+    AuthToken  AuthToken[]
+    bookings   Booking[]
+}
+
+// INIT - ALL ABOUT PROPERTIES
+
+// hotel, bnb, apartment, house, villa, etc
+model PropertyType {
+    id         Int        @id @default(autoincrement())
+    name       String
+    createdAt  DateTime   @default(now())
+    updatedAt  DateTime   @updatedAt
+    properties Property[]
+}
+
+// All the services category that a property can have
+// Location, Accessibiliy, Attractions, Cleaning, Common Areas, Food & Drink, Internet,
+// Parking, Pool & Spa, Safety & Security, Services, Shops, Transportation, languages spoken
+model EquipmentType {
+    id         Int         @id @default(autoincrement())
+    name       String
+    createdAt  DateTime    @default(now())
+    updatedAt  DateTime    @updatedAt
+    equipments Equipment[]
+}
+
+// All the services that a property can have
+// Location: Beachfront, City view, Garden view, Lake view, Landmark view, Mountain view, Ocean view, Pool view, River view, etc
+// Accessibiliy: Entire unit wheelchair accessible, Upper floors accessible by stairs only, etc
+// Attractions: Casino, etc
+model Equipment {
+    id         String              @id @default(cuid())
+    name       String
+    createdAt  DateTime            @default(now())
+    updatedAt  DateTime            @updatedAt
+    properties PropertyEquipment[]
+    typeId     Int
+    type       EquipmentType       @relation(fields: [typeId], references: [id])
+}
+
+model PropertyEquipment {
+    id          String    @id @default(cuid())
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    price       Float     @default(0)
+    property    Property  @relation(fields: [propertyId], references: [id])
+    propertyId  String
+    equipment   Equipment @relation(fields: [equipmentId], references: [id])
+    equipmentId String
+
+    @@map("PropertyEquipment")
+}
+
+model Property {
+    id String @id @default(cuid())
+
+    propertyCode Int?
+
+    // position
+    address    String?
+    city       String?
+    area       String?
+    postCode   String?
+    codCountry String?
+    latitude   Float?
+    longitude  Float?
+
+    // property images
+    images String[]
+
+    // timetable information
+    name              String
+    checkinStart      String?
+    checkinEnd        String?
+    checkoutStart     String?
+    checkoutEnd       String?
+    lateCheckinStart  String?
+    lateCheckinCharge Float?
+
+    // contacts information
+    phone String?
+    email String?
+
+    merchant   User   @relation(fields: [merchantId], references: [id])
+    merchantId String
+
+    type   PropertyType @relation(fields: [typeId], references: [id])
+    typeId Int
+
+    services  PropertyEquipment[]
+    roomtypes RoomType[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// END - ALL ABOUT PROPERTIES
+// INIT - ALL ABOUT ROOMS
+
+// Single, Double, Triple, Quadruple, Family, Bungalow, Suite, etc
+model RoomTypeCategory {
+    id        Int        @id @default(autoincrement())
+    name      String
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @updatedAt
+    rooms     RoomType[]
+}
+
+// Same as EquipmentType but only for rooms
+model AmenityType {
+    id        Int       @id @default(autoincrement())
+    name      String
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    amenities Amenity[]
+}
+
+// model AmenityTranslation {
+//     id          Int     @id @default(autoincrement())
+//     name        String?
+//     description String?
+
+//     amenity   Amenity @relation(fields: [amenityId], references: [id])
+//     amenityId Int
+
+//     language   Language @relation(fields: [languageId], references: [id])
+//     languageId Int
+
+//     createdAt DateTime @default(now())
+//     updatedAt DateTime @updatedAt
+// }
+
+model Amenity {
+    id               Int      @id @default(autoincrement())
+    name             String
+    code             String   @unique
+    nameTranslations Json?
+    createdAt        DateTime @default(now())
+    updatedAt        DateTime @updatedAt
+
+    typeId Int?
+    type   AmenityType? @relation(fields: [typeId], references: [id])
+
+    // AmenityTranslation AmenityTranslation[]
+
+    RoomTypeAmenity RoomTypeAmenity[]
+}
+
+model RoomTypeAmenity {
+    id String @id @default(cuid())
+
+    roomType   RoomType @relation(fields: [roomTypeId], references: [id])
+    roomTypeId Int
+
+    amenity   Amenity @relation(fields: [amenityId], references: [id])
+    amenityId Int
+
+    createdAt DateTime  @default(now())
+    updatedAt DateTime? @updatedAt
+}
+
+model RoomType {
+    id   Int     @id @default(autoincrement())
+    name String?
+    code Int?    @unique
+
+    roomTypeCategory   RoomTypeCategory? @relation(fields: [roomTypeCategoryId], references: [id])
+    roomTypeCategoryId Int?
+
+    address    String?
+    city       String?
+    postCode   String?
+    codCountry String?
+
+    standardOccupancy Int?
+    minOccupancy      Int?
+    maxOccupancy      Int?
+
+    nBedrooms  Int?
+    nBathrooms Int?
+
+    bedRoomDetails  Json?
+    bathRoomDetails Json?
+
+    smoking Boolean @default(false)
+
+    sizeMq Float?
+    sizeFt Float?
+
+    floor    Int?
+    elevator String?
+
+    images String[]
+
+    tags String[]
+
+    hide Boolean @default(false)
+
+    Property   Property? @relation(fields: [propertyId], references: [id])
+    propertyId String?
+
+    // RoomTypeTranslation RoomTypeTranslation[]
+    BeName        Json?
+    BeDescription Json?
+
+    Room     Room[]
+    bookings Booking[]
+
+    createdAt                  DateTime                     @default(now())
+    updatedAt                  DateTime                     @updatedAt
+    RoomBathRoom               RoomBathRoom[]
+    RoomTypePricesAvailability RoomTypePricesAvailability[]
+    RoomTypeAmenity            RoomTypeAmenity[]
+}
+
+// RoomTypeTranslation example: {key: "be_name", value: "Beautiful room", roomType: 1, language: 2}
+// model RoomTypeTranslation {
+//     id    Int     @id @default(autoincrement())
+//     key   String?
+//     value String?
+
+//     roomType   RoomType @relation(fields: [roomTypeId], references: [id])
+//     roomTypeId Int
+
+//     language   Language @relation(fields: [languageId], references: [id])
+//     languageId Int
+
+//     createdAt DateTime @default(now())
+//     updatedAt DateTime @updatedAt
+// }
+
+// All room inside a roomtype: bedroom, livingroom, etc
+model Room {
+    id String @id @default(cuid())
+
+    name String
+
+    kingBed       Int?
+    queenBed      Int?
+    doubleBed     Int?
+    singleBed     Int?
+    sofaBed       Int?
+    couch         Int?
+    bunkBed       Int?
+    toddlerBed    Int?
+    crib          Int?
+    floorMattress Int?
+    bathroom      Int? // bagno in camera
+
+    roomType   RoomType @relation(fields: [roomTypeId], references: [id])
+    roomTypeId Int
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model RoomBathRoom {
+    id String @id @default(cuid())
+
+    roomBathRoomType   RoomBathRoomType @relation(fields: [roomBathRoomTypeId], references: [id])
+    roomBathRoomTypeId Int
+
+    bidet Boolean?
+
+    shower        Boolean?
+    outdoorShower Boolean?
+
+    tubShower Boolean?
+    bathtub   Boolean?
+    whirlpool Boolean?
+
+    wc Boolean?
+
+    roomType   RoomType @relation(fields: [roomTypeId], references: [id])
+    roomTypeId Int
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// Bagno completo (con vasca o doccia); No vasca/doccia; Doccia interna o esterna.
+model RoomBathRoomType {
+    id   Int    @id @default(autoincrement())
+    name String
+
+    createdAt    DateTime       @default(now())
+    updatedAt    DateTime       @updatedAt
+    RoomBathRoom RoomBathRoom[]
+}
+
+model RoomTypePricesAvailability {
+    id String @id @default(cuid())
+
+    roomType   RoomType @relation(fields: [roomTypeId], references: [id])
+    roomTypeId Int
+
+    rateId Int?
+
+    price Float?
+
+    dateFrom DateTime?
+    dateTo   DateTime?
+
+    closed             Boolean?
+    minimumStay        Int?
+    minimumStayArrival Int?
+    maximumStay        Int?
+    maximumStayArrival Int?
+    closedArrival      Boolean?
+    closedDeparture    Boolean?
+    total              Int?
+    booked             Int?
+    blocked            Int?
+    free               Int?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// END - ALL ABOUT ROOMS
+// INIT - UTILS
+
+model Language {
+    id        Int      @id @default(autoincrement())
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    // translations       RoomTypeTranslation[]
+    // AmenityTranslation AmenityTranslation[]
+}
+
+model Booking {
+    id String @id @default(cuid())
+
+    roomType   RoomType? @relation(fields: [roomTypeId], references: [id])
+    roomTypeId Int?
+
+    user           User?   @relation(fields: [userId], references: [id])
+    userId         String?
+    userIdentifier String?
+
+    checkin  DateTime
+    checkout DateTime
+
+    chi_adulti  Int
+    chi_bambini Int
+    chi_neonati Int
+    chi_pets    Int
+
+    price Float?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}

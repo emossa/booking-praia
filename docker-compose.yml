@@ -1,0 +1,13 @@
+services:
+  postgres:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgresData:/var/lib/postgresql/data
+      - ./configuratore-web/prisma/dbCsv:/dbCsv
+
+    environment:
+      POSTGRES_PASSWORD: Pass2020!
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
